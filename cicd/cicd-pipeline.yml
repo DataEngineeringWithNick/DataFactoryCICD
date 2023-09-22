@@ -1,0 +1,104 @@
+name: DataFactory-CICD-Pipeline$(Date:yyyyMMdd)$(Rev:.r)
+
+trigger: none
+
+pool:
+  vmImage: "windows-latest"
+
+stages:
+- stage: BuildDEVDataFactory
+  displayName: "Build DEV Data Factory"
+  
+  variables:
+  - template: variables/dev-variables.yml
+
+  jobs:
+  - job: ValidateAndBuildDataFactoryTemplate
+    displayName: "Build DEV Data Factory"
+    steps:
+    - template: adf-cicd/adf-build.yml
+      parameters:
+        DataFactoryName: "${{ variables.BuildDataFactoryName }}"
+        ResourceGroupName: "${{ variables.BuildDataFactoryResourceGroupName }}"
+        ADFArtifactName: "${{ variables.ADFArtifactName }}"
+        WorkingDirectory: "${{ variables.WorkingDirectory }}"
+
+- stage: DeployToUAT
+  dependsOn: BuildDEVDataFactory
+  condition: succeeded()
+  displayName: "Deploy To UAT"
+
+  variables:
+  - template: variables/uat-variables.yml
+
+  jobs:
+  - deployment: ApprovalCheckDeployToUAT
+    displayName: "Approval Check To Deploy To UAT"
+    environment: UAT
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - powershell: |
+              Write-Host "Deploy To UAT has been fully approved. Starting the deployment to UAT."
+  
+  - job: DeployAzureResources
+    displayName: "Deploy Azure Resources Via Bicep"
+    steps:
+    - template: azure-resources/deploy-azure-resources.yml
+      parameters:
+        AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
+        DataFactoryName: "${{ variables.DataFactoryName }}"
+        ADFResourceGroupName: "${{ variables.ADFResourceGroupName }}"
+        ADFBicepTemplateFilePath: "${{ variables.ADFBicepTemplateFilePath }}"
+        KeyVaultName: "${{ variables.KeyVaultName }}"
+        KeyVaultResourceGroupName: "${{ variables.KeyVaultResourceGroupName }}"
+        KeyVaultURL: "${{ variables.KeyVaultURL }}"
+        KeyVaultBicepTemplateFilePath: "${{ variables.KeyVaultBicepTemplateFilePath }}"
+
+  - job: DeployADF
+    displayName: "Deploy ADF ARM Template To Target ADF"
+    dependsOn: DeployAzureResources
+    condition: succeeded()
+    steps:
+    - template: adf-cicd/adf-deploy.yml
+      parameters:
+        AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
+        DataFactoryName: "${{ variables.DataFactoryName }}"
+        DataFactoryTemplateParametersFilePath: "${{ variables.DataFactoryTemplateParametersFilePath }}"
+        ResourceGroupName: "${{ variables.ADFResourceGroupName }}"
+        ResourceGroupLocation: "${{ variables.ResourceGroupLocation }}"
+        ADFArtifactName: "${{ variables.ADFArtifactName }}"
+        Environment: "${{ variables.Environment }}"
+
+
+# - stage: DeployToPROD
+#   displayName: "Deploy To PROD"
+
+#   variables:
+#   - template: variables/prod-variables.yml
+
+#   jobs:
+#   - template: azure-resources/deploy-azure-resources.yml
+#     parameters:
+#       AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
+#       DataFactoryName: "${{ variables.DataFactoryName }}"
+#       ADFResourceGroupName: "${{ variables.ADFResourceGroupName }}"
+#       ADFBicepTemplateFilePath: "${{ variables.ADFBicepTemplateFilePath }}"
+#       KeyVaultName: "${{ variables.KeyVaultName }}"
+#       KeyVaultResourceGroupName: "${{ variables.KeyVaultResourceGroupName }}"
+#       KeyVaultURL: "${{ variables.KeyVaultURL }}"
+#       KeyVaultBicepTemplateFilePath: "${{ variables.KeyVaultBicepTemplateFilePath }}"
+
+#   - template: adf-cicd/adf-deploy.yml
+#     parameters:
+#       AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
+#       DataFactoryName: "${{ variables.DataFactoryName }}"
+#       DataFactoryTemplateParametersFilePath: "${{ variables.DataFactoryTemplateParametersFilePath }}"
+#       ResourceGroupName: "${{ variables.ADFResourceGroupName }}"
+#       ResourceGroupLocation: "${{ variables.ResourceGroupLocation }}"
+#       ADFArtifactName: "${{ variables.ADFArtifactName }}"
+#       Environment: "${{ variables.Environment }}"
+
+
+

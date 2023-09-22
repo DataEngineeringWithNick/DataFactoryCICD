@@ -1,0 +1,63 @@
+
+parameters:
+- name: AzureResourceManagerConnection
+  type: string
+  default: DataFactoryCICDAzureResourceManager
+
+- name: DependsOnJobs
+  type: string
+  
+
+# Data Factory (ADF)
+- name: DataFactoryName
+  type: string
+- name: ADFResourceGroupName
+  type: string
+- name: ADFBicepTemplateFilePath
+  type: string
+  default: "$(Build.Repository.LocalPath)/cicd/azure-resources/adf.bicep"
+
+# Key Vault
+- name: KeyVaultName
+  type: string
+- name: KeyVaultResourceGroupName
+  type: string
+- name: KeyVaultURL
+  type: string
+- name: KeyVaultBicepTemplateFilePath
+  type: string
+  default: "$(Build.Repository.LocalPath)/cicd/azure-resources/keyvault.bicep"
+
+jobs:
+- job: DeployAzureResources
+  displayName: "Deploy Azure Resources Via Bicep"
+
+  steps:
+  - checkout: self
+    displayName: "Checkout Source Repo Code"
+  
+  - task: AzureCLI@2
+    displayName: "Data Factory Deploy Via Bicep"
+    inputs:
+      azureSubscription: "${{ parameters.AzureResourceManagerConnection }}"
+      scriptType: bash
+      scriptLocation: "inlineScript"
+      inlineScript: |
+        az deployment group create \
+          --name "MyADFDeployment$(Build.BuildNumber)" \
+          --resource-group "${{ parameters.ADFResourceGroupName }}" \
+          --template-file "${{ parameters.ADFBicepTemplateFilePath }}" \
+          --parameters dataFactoryName="${{ parameters.DataFactoryName }}" 
+
+  - task: AzureCLI@2
+    displayName: "Key Vault Deploy Via Bicep"
+    inputs:
+      azureSubscription: "${{ parameters.AzureResourceManagerConnection }}"
+      scriptType: bash
+      scriptLocation: "inlineScript"
+      inlineScript: |
+        az deployment group create \
+          --name "MyKeyVaultDeployment$(Build.BuildNumber)" \
+          --resource-group "${{ parameters.KeyVaultResourceGroupName }}" \
+          --template-file "${{ parameters.KeyVaultBicepTemplateFilePath }}" \
+          --parameters keyVaultName="${{ parameters.KeyVaultName }}" keyVaultURL="${{ parameters.KeyVaultURL }}" 
