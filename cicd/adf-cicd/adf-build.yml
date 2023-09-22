@@ -34,7 +34,7 @@ steps:
   displayName: "Validate And Generate ADF ARM Template And Scripts"
   inputs:
     command: "custom"
-    workingDir: ${{ parameters.WorkingDirectory }}/AzureDataFactoryCICDAzurePipeline
+    workingDir: ${{ parameters.WorkingDirectory }}
     customCommand: 'run build export ${{ parameters.WorkingDirectory }} /subscriptions/$(DEVSubscriptionID)/resourceGroups/${{ parameters.ResourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ parameters.DataFactoryName }} "ArmTemplate"'
   env:
     DEVSUBSCRIPTIONID: $(DEVSubscriptionID) 
