@@ -1,0 +1,12 @@
+{
+	"name": "LS_KV",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "Key Vault Linked Service",
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://kv-njl-adf-cicd-dev.vault.azure.net/"
+		}
+	}
+}

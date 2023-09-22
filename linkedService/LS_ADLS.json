@@ -1,0 +1,12 @@
+{
+	"name": "LS_ADLS",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "Data Lake Linked Service",
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://adlsadfcicddev.dfs.core.windows.net/"
+		}
+	}
+}

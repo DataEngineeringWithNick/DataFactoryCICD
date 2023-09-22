@@ -1,0 +1,44 @@
+{
+	"name": "DS_ADLS_TEXT",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"strFolderName": {
+				"type": "string",
+				"defaultValue": "Names"
+			},
+			"strFileName": {
+				"type": "string",
+				"defaultValue": "Names.txt"
+			}
+		},
+		"folder": {
+			"name": "ADLS"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().strFileName",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().strFolderName",
+					"type": "Expression"
+				},
+				"fileSystem": "sourcedata"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
