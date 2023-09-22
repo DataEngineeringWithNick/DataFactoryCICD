@@ -35,10 +35,8 @@ steps:
   inputs:
     command: "custom"
     workingDir: ${{ parameters.WorkingDirectory }}
-    customCommand: 'run build export ${{ parameters.WorkingDirectory }} /subscriptions/$(DEVSubscriptionID)/resourceGroups/${{ parameters.ResourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ parameters.DataFactoryName }} "ArmTemplate"'
-  env:
-    DEVSUBSCRIPTIONID: $(DEVSubscriptionID) 
-    # DevSubscriptionID is a secret variable. Secret variables have to be mapped explicitly. Go to the pipeline in Azure DevOps and select edit pipeline and then click variables and click the checkbox to save a variable as secret variable.
+    customCommand: 'run build export ${{ parameters.WorkingDirectory }} /subscriptions/$(DEVSubscriptionID)/resourceGroups/${{ parameters.ResourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ parameters.DataFactoryName }} "ArmTemplate"' 
+    # DEVSubscriptionID is a secret variable. Go to the pipeline in Azure DevOps and select edit pipeline and then click variables and click the checkbox to save a variable as secret variable.
 
 - task: PublishPipelineArtifact@1
   displayName: "Publish ADF ARM Template And Scripts"
