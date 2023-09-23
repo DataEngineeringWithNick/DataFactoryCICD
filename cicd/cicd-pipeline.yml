@@ -1,4 +1,4 @@
-name: DataFactory-CICD-Pipeline$(Date:yyyyMMdd)$(Rev:.r)
+name: DataFactory-CICD-Pipeline-$(Date:yyyyMMdd)$(Rev:.r)
 
 trigger: none
 
