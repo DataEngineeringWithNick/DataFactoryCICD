@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-njl-dev"
+		},
+		"LS_ADLS_properties_typeProperties_url": {
+			"value": "https://adlsadfcicddev.dfs.core.windows.net/"
+		},
+		"LS_KV_properties_typeProperties_baseUrl": {
+			"value": "https://kv-njl-adf-cicd-dev.vault.azure.net/"
+		},
+		"default_properties_GL_KV_NAME_value": {
+			"value": "kv-njl-adf-cicd-dev"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
