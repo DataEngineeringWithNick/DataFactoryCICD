@@ -4,7 +4,7 @@ variables:
 - name: AzureResourceManagerConnection # Service Principal that has the Contributor RBAC (role based access control) permission to deploy the Data Factory ARM template to the UAT resource group rg-adf-cicd-uat
   value: DataFactoryCICDAzureResourceManager
 
-# Data Factory
+# Data Factory (ADF)
 - name: DataFactoryName
   value: adf-njl-uat
 
