@@ -1,1 +1,1 @@
-# Data Factory CICD Process
+# Data Factory CI/CD Process
