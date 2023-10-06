@@ -159,35 +159,3 @@ stages:
 
 
 
-
-
-# - stage: DeployToPROD
-#   displayName: "Deploy To PROD"
-
-#   variables:
-#   - template: variables/prod-variables.yml
-
-#   jobs:
-#   - template: azure-resources/deploy-azure-resources.yml
-#     parameters:
-#       AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
-#       DataFactoryName: "${{ variables.DataFactoryName }}"
-#       ADFResourceGroupName: "${{ variables.ADFResourceGroupName }}"
-#       ADFBicepTemplateFilePath: "${{ variables.ADFBicepTemplateFilePath }}"
-#       KeyVaultName: "${{ variables.KeyVaultName }}"
-#       KeyVaultResourceGroupName: "${{ variables.KeyVaultResourceGroupName }}"
-#       KeyVaultURL: "${{ variables.KeyVaultURL }}"
-#       KeyVaultBicepTemplateFilePath: "${{ variables.KeyVaultBicepTemplateFilePath }}"
-
-#   - template: adf-cicd/adf-deploy.yml
-#     parameters:
-#       AzureResourceManagerConnection: "${{ variables.AzureResourceManagerConnection }}"
-#       DataFactoryName: "${{ variables.DataFactoryName }}"
-#       DataFactoryTemplateParametersFilePath: "${{ variables.DataFactoryTemplateParametersFilePath }}"
-#       ResourceGroupName: "${{ variables.ADFResourceGroupName }}"
-#       ResourceGroupLocation: "${{ variables.ResourceGroupLocation }}"
-#       ADFArtifactName: "${{ variables.ADFArtifactName }}"
-#       Environment: "${{ variables.Environment }}"
-
-
-
